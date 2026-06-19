@@ -6,11 +6,13 @@ import "./globals.css";
 const notoSansTc = Noto_Sans_TC({
   variable: "--font-noto-sans-tc",
   weight: ["400", "500", "700"],
+  subsets: ["latin"],
 });
 
 const notoSerifTc = Noto_Serif_TC({
   variable: "--font-noto-serif-tc",
   weight: ["400", "600", "700"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
