@@ -8,10 +8,12 @@ export function AppointmentForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const form = event.currentTarget;
+
     event.preventDefault();
     setStatus("loading");
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
 
     const payload = {
       name: String(formData.get("name") || ""),
@@ -34,7 +36,7 @@ export function AppointmentForm() {
       }
 
       setStatus("success");
-      event.currentTarget.reset();
+      form.reset();
     } catch {
       setStatus("error");
     }

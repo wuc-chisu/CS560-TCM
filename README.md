@@ -86,6 +86,31 @@ npm run dev
 - Authorized redirect URI 設為: `http://localhost:3000/api/auth/callback/google`
 - 將 `GOOGLE_CLIENT_ID` 與 `GOOGLE_CLIENT_SECRET` 填入 `.env`
 
+## Contact Us 表單寄信設定
+
+- 安裝寄信套件：`npm install nodemailer`
+- 在專案根目錄建立 `.env.local`，並填入以下 Gmail SMTP 設定：
+
+```bash
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="465"
+SMTP_USER="your-gmail@gmail.com"
+SMTP_PASS="your-16-digit-app-password"
+CONTACT_TO_EMAIL="your-gmail@gmail.com"
+CONTACT_FROM_EMAIL="your-gmail@gmail.com"
+```
+
+- `SMTP_PASS` 請使用 Gmail App Password，不要填入一般登入密碼
+- 使用者送出聯絡表單後，網站會呼叫 `POST /api/contact`，API 會先驗證欄位，再透過 Gmail SMTP 將內容寄到 `CONTACT_TO_EMAIL`
+
+## Contact Us 測試方式
+
+1. 將 `.env.example` 內容補到 `.env.local`
+2. 執行 `npm run dev`
+3. 開啟首頁並送出 Contact Us 表單
+4. 確認畫面有成功訊息，並檢查 Gmail 收件匣
+5. 可用少於 10 字的訊息測試驗證錯誤，確認表單會顯示失敗原因
+
 ## 預約資料儲存
 
 - 預約表單送出後會呼叫 `POST /api/appointments`
