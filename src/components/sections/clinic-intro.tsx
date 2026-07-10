@@ -14,7 +14,7 @@ export function ClinicIntro() {
         <div>
           <SectionHeading
             eyebrow="ABOUT US"
-            title="以仁心醫術，守護您的身心平衡"
+            title="以仁心醫術blah blah blah，守護您的身心平衡"
             description="秉持古法精髓與現代醫學觀點，和安中醫診所重視每一次問診與脈診，從根本改善體質，陪伴您找回穩定健康。"
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2">

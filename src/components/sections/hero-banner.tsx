@@ -12,7 +12,7 @@ export function HeroBanner() {
           <p className="mb-4 text-xs tracking-[0.28em] text-amber-200/90">傳承千年智慧．守護現代健康</p>
           <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
             和安中醫診所
-            <span className="mt-2 block text-2xl font-normal text-amber-200 sm:text-3xl">專業中醫診療｜針灸美容｜體質調理</span>
+            <span className="mt-2 block text-2xl font-normal text-amber-200 sm:text-3xl">專業中醫診療a｜針灸美容a｜體質調理</span>
           </h1>
           <p className="mt-6 max-w-xl text-sm leading-7 text-amber-100/90 sm:text-base">
             以辨證論治為核心，結合現代檢測與完整病歷追蹤，提供從急性不適到慢性調理的全方位中醫照護。
