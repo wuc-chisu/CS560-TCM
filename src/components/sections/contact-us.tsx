@@ -1,8 +1,12 @@
 import { AppointmentForm } from "@/components/forms/appointment-form";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { appointmentDoctorOptions, appointmentServiceOptions } from "@/lib/appointment-schema";
+import { prisma } from "@/lib/prisma";
 
-export function ContactUs() {
+export async function ContactUs() {
+  const [doctorOptions, serviceOptions] = await getAppointmentOptions();
+
   return (
     <section id="contact" className="bg-[#f8f2e8] py-16 sm:py-20">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -26,11 +30,36 @@ export function ContactUs() {
             </div>
           </div>
           <div className="space-y-6">
-            <AppointmentForm />
+            <AppointmentForm doctorOptions={doctorOptions} serviceOptions={serviceOptions} />
             <ContactForm />
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+async function getAppointmentOptions() {
+  try {
+    const [doctors, services] = await Promise.all([
+      prisma.doctor.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: "asc" },
+        select: { name: true },
+      }),
+      prisma.service.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: "asc" },
+        select: { name: true },
+      }),
+    ]);
+
+    return [
+      doctors.map((doctor) => doctor.name),
+      services.map((service) => service.name),
+    ] as const;
+  } catch (error) {
+    console.error("Failed to load booking options", error);
+    return [[...appointmentDoctorOptions], [...appointmentServiceOptions]] as const;
+  }
 }

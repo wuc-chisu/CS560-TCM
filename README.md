@@ -72,6 +72,7 @@ cp .env.example .env
 ```bash
 npx prisma generate
 npx prisma db push
+npm run db:seed
 ```
 
 4. 啟動開發伺服器
@@ -114,4 +115,16 @@ CONTACT_FROM_EMAIL="your-gmail@gmail.com"
 ## 預約資料儲存
 
 - 預約表單送出後會呼叫 `POST /api/appointments`
-- API 透過 Prisma 將資料寫入 PostgreSQL 的 `Appointment` 資料表
+- API 透過 Prisma 將資料寫入 PostgreSQL，並關聯 `Patient`、`Doctor`、`Service`、`Appointment` 等預約資料表
+- Booking Form 的醫師與診療項目選單會從資料庫的啟用資料讀取
+- 同一位醫師在相同日期與時間若已有 `PENDING` 或 `CONFIRMED` 預約，系統會阻擋重複預約
+- API 也會檢查 `DoctorSchedule` 與 `ClinicClosure`，擋掉未開診時段與休診日
+
+## 預設預約資料
+
+- 執行 `npm run db:seed` 會建立預設醫師、診療項目與週一至週五 09:00-17:00 的醫師排班資料
+
+## 預約管理後台
+
+- 路徑為 `/admin/appointments`
+- 未登入時會顯示 Google 登入卡片；登入後可查看全部、待確認、已確認、已取消的預約清單
