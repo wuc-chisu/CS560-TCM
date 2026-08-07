@@ -68,7 +68,7 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="ADMIN"
-          title="預約管理後台TEST"
+          title="預約管理後台"
           description="查看待確認、已確認與已取消的預約紀錄，掌握門診排程狀態。"
         />
 
