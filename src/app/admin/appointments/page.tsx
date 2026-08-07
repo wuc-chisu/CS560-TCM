@@ -205,10 +205,12 @@ function statusBadgeClassName(status: AppointmentStatus) {
 }
 
 async function getAdminViewer(session: Awaited<ReturnType<typeof getServerSession>>): Promise<AdminViewer | null> {
-  if (session?.user) {
+  const sessionUser = (session as { user?: { email?: string | null; name?: string | null } } | undefined)?.user;
+
+  if (sessionUser) {
     return {
       kind: "session",
-      label: session.user.email || session.user.name || "Google 使用者",
+      label: sessionUser.email || sessionUser.name || "Google 使用者",
     };
   }
 

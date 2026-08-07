@@ -1,3 +1,7 @@
+"use client";
+
+import { useAppointmentModal } from "@/components/providers/appointment-modal-provider";
+
 const navItems = [
   { label: "首頁", href: "#hero" },
   { label: "診所介紹", href: "#about" },
@@ -8,6 +12,8 @@ const navItems = [
 ];
 
 export function SiteHeader() {
+  const { openAppointmentModal } = useAppointmentModal();
+
   return (
     <header className="sticky top-0 z-50 border-b border-red-950/10 bg-[#f8f2e8]/90 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -24,12 +30,13 @@ export function SiteHeader() {
             </a>
           ))}
         </nav>
-        <a
-          href="#contact"
+        <button
+          type="button"
+          onClick={openAppointmentModal}
           className="rounded-full bg-red-800 px-4 py-2 text-xs font-medium text-amber-100 transition hover:bg-red-700 sm:text-sm"
         >
           線上預約
-        </a>
+        </button>
       </div>
     </header>
   );

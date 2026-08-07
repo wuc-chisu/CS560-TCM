@@ -1,6 +1,11 @@
+"use client";
+
 import { GoogleLoginButton } from "@/components/auth/google-login-button";
+import { useAppointmentModal } from "@/components/providers/appointment-modal-provider";
 
 export function HeroBanner() {
+  const { openAppointmentModal } = useAppointmentModal();
+
   return (
     <section
       id="hero"
@@ -18,12 +23,13 @@ export function HeroBanner() {
             以辨證論治為核心，結合現代檢測與完整病歷追蹤，提供從急性不適到慢性調理的全方位中醫照護。
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#contact"
+            <button
+              type="button"
+              onClick={openAppointmentModal}
               className="rounded-full bg-amber-300 px-6 py-3 text-sm font-semibold text-red-950 transition hover:bg-amber-200"
             >
               立即預約
-            </a>
+            </button>
             <GoogleLoginButton />
           </div>
         </div>

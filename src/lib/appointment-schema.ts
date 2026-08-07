@@ -31,6 +31,7 @@ function buildPreferredAt(date: string, time: string) {
 
 export const appointmentSchema = z
   .object({
+    patientType: z.enum(["new", "returning"]).optional().or(z.literal("")),
     name: z.string().trim().min(2, "姓名至少需要 2 個字").max(50, "姓名不可超過 50 個字"),
     phone: z
       .string()
@@ -54,6 +55,7 @@ export const appointmentSchema = z
   })
   .transform((data) => ({
     ...data,
+    patientType: data.patientType || "",
     service: data.service.trim(),
     doctor: data.doctor.trim(),
     preferredAt: buildPreferredAt(data.preferredDate, data.preferredTime),

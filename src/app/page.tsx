@@ -6,20 +6,24 @@ import { Doctors } from "@/components/sections/doctors";
 import { HealthArticles } from "@/components/sections/health-articles";
 import { HeroBanner } from "@/components/sections/hero-banner";
 import { Services } from "@/components/sections/services";
+import { AppointmentModalProvider } from "@/components/providers/appointment-modal-provider";
+import { appointmentDoctorOptions, appointmentServiceOptions } from "@/lib/appointment-schema";
 
 export default function Home() {
   return (
-    <div className="bg-[#f8f2e8]">
-      <SiteHeader />
-      <main>
-        <HeroBanner />
-        <ClinicIntro />
-        <Services />
-        <Doctors />
-        <HealthArticles />
-        <ContactUs />
-      </main>
-      <SiteFooter />
-    </div>
+    <AppointmentModalProvider doctorOptions={[...appointmentDoctorOptions]} serviceOptions={[...appointmentServiceOptions]}>
+      <div className="bg-[#f8f2e8]">
+        <SiteHeader />
+        <main>
+          <HeroBanner />
+          <ClinicIntro />
+          <Services />
+          <Doctors />
+          <HealthArticles />
+          <ContactUs />
+        </main>
+        <SiteFooter />
+      </div>
+    </AppointmentModalProvider>
   );
 }
