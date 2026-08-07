@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f2e8;
+  --foreground: #2f241f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-noto-sans-tc);
+  --font-serif: var(--font-noto-serif-tc);
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-noto-sans-tc), serif;
+  background-image:
+    radial-gradient(circle at 10% 0%, rgba(175, 98, 45, 0.12), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(125, 29, 29, 0.12), transparent 30%);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-noto-serif-tc), serif;
+}

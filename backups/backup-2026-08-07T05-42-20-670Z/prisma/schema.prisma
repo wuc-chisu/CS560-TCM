@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+model Patient {
+  id           String        @id @default(cuid())
+  name         String
+  phone        String        @unique
+  email        String?
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Doctor {
+  id           String           @id @default(cuid())
+  name         String           @unique
+  specialty    String?
+  isActive     Boolean          @default(true)
+  appointments Appointment[]
+  schedules    DoctorSchedule[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Service {
+  id              String        @id @default(cuid())
+  name            String        @unique
+  durationMinutes Int           @default(60)
+  isActive        Boolean       @default(true)
+  appointments    Appointment[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  patientId   String?
+  doctorId    String?
+  serviceId   String?
+  name        String
+  phone       String
+  email       String?
+  service     String
+  doctor      String?
+  preferredAt DateTime
+  status      AppointmentStatus @default(PENDING)
+  message     String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @default(now()) @updatedAt
+  patient     Patient?          @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  doctorInfo  Doctor?           @relation(fields: [doctorId], references: [id], onDelete: SetNull)
+  serviceInfo Service?          @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([patientId])
+  @@index([doctorId, preferredAt])
+  @@index([serviceId])
+}
+
+model DoctorSchedule {
+  id          String   @id @default(cuid())
+  doctorId    String
+  weekday     Int
+  startTime   String
+  endTime     String
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  doctor      Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, weekday, startTime, endTime])
+  @@index([doctorId, weekday])
+}
+
+model ClinicClosure {
+  id          String   @id @default(cuid())
+  closureDate DateTime @unique
+  reason      String?
+  isFullDay   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
