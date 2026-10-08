@@ -1,4 +1,5 @@
 import { SiteFooter } from "@/components/layout/site-footer";
+import { AdminLink } from "@/components/layout/admin-link";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ClinicIntro } from "@/components/sections/clinic-intro";
 import { ContactUs } from "@/components/sections/contact-us";
@@ -13,7 +14,7 @@ export default function Home() {
   return (
     <AppointmentModalProvider doctorOptions={[...appointmentDoctorOptions]} serviceOptions={[...appointmentServiceOptions]}>
       <div className="bg-[#f8f2e8]">
-        <SiteHeader />
+        <SiteHeader adminSlot={<AdminLink />} />
         <main>
           <HeroBanner />
           <ClinicIntro />

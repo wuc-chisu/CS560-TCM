@@ -1,6 +1,6 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
-import { AuthSessionProvider } from "@/components/providers/session-provider";
 import "./globals.css";
 
 const notoSansTc = Noto_Sans_TC({
@@ -31,7 +31,9 @@ export default function RootLayout({
       className={`${notoSansTc.variable} ${notoSerifTc.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthSessionProvider>{children}</AuthSessionProvider>
+        <ClerkProvider>
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

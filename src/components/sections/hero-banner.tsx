@@ -1,6 +1,5 @@
 "use client";
 
-import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { useAppointmentModal } from "@/components/providers/appointment-modal-provider";
 
 export function HeroBanner() {
@@ -30,7 +29,6 @@ export function HeroBanner() {
             >
               立即預約
             </button>
-            <GoogleLoginButton />
           </div>
         </div>
         <div className="w-full max-w-md rounded-3xl border border-amber-300/20 bg-amber-50/10 p-6 backdrop-blur">

@@ -6,7 +6,7 @@
 
 - Next.js App Router
 - Tailwind CSS
-- NextAuth Google Login
+- Clerk 登入（管理員由 `ADMIN_EMAILS` 設定，預設 `chisu@wuc.edu`）
 - PostgreSQL + Prisma
 - TypeScript + Zod
 
@@ -81,11 +81,10 @@ npm run db:seed
 npm run dev
 ```
 
-## Google Login 設定
+## Clerk 登入設定
 
-- 在 Google Cloud Console 建立 OAuth Client
-- Authorized redirect URI 設為: `http://localhost:3000/api/auth/callback/google`
-- 將 `GOOGLE_CLIENT_ID` 與 `GOOGLE_CLIENT_SECRET` 填入 `.env`
+- 執行 `clerk init` 或將 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 與 `CLERK_SECRET_KEY` 填入 `.env.local`
+- 管理員帳號以 `ADMIN_EMAILS`（逗號分隔，預設 `chisu@wuc.edu`）設定，且 Email 必須已通過驗證
 
 ## Contact Us 表單寄信設定
 
@@ -127,4 +126,4 @@ CONTACT_FROM_EMAIL="your-gmail@gmail.com"
 ## 預約管理後台
 
 - 路徑為 `/admin/appointments`
-- 未登入時會顯示 Google 登入卡片；登入後可查看全部、待確認、已確認、已取消的預約清單
+- 僅管理員可進入；未登入會顯示登入按鈕，非管理員會看到無權限提示。管理員登入後可查看全部、待確認、已確認、已取消的預約清單

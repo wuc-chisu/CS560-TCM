@@ -1,10 +1,9 @@
-import { GoogleLoginButton } from "@/components/auth/google-login-button";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { authOptions } from "@/lib/auth";
+import { getAdminAccess } from "@/lib/admin";
 import { prisma } from "@/lib/prisma";
 import { AppointmentStatus } from "@prisma/client";
-import { headers } from "next/headers";
-import { getServerSession } from "next-auth";
+import Link from "next/link";
+import { updateAppointmentStatus } from "./actions";
 
 const statusOptions = [
   { value: "ALL", label: "全部預約" },
@@ -20,25 +19,10 @@ type PageProps = {
 };
 
 export default async function AdminAppointmentsPage({ searchParams }: PageProps) {
-  const session = await getServerSession(authOptions);
-  const viewer = await getAdminViewer(session);
+  const access = await getAdminAccess();
 
-  if (!viewer) {
-    return (
-      <main className="min-h-screen bg-[#f8f2e8] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-xl rounded-3xl border border-red-900/10 bg-white/90 p-8 shadow-lg shadow-red-950/5">
-          <SectionHeading
-            eyebrow="ADMIN"
-            title="預約管理後台"
-            description="請先使用 Google 帳號登入，再查看與管理門診預約。"
-            center
-          />
-          <div className="mt-8 flex justify-center">
-            <GoogleLoginButton />
-          </div>
-        </div>
-      </main>
-    );
+  if (access.status !== "admin") {
+    return null;
   }
 
   const query = await searchParams;
@@ -64,19 +48,13 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
   const totalCount = counts.reduce((sum, item) => sum + item._count._all, 0);
 
   return (
-    <main className="min-h-screen bg-[#f8f2e8] py-12 sm:py-16">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div>
+      <div>
         <SectionHeading
-          eyebrow="ADMIN"
-          title="預約管理後台"
+          eyebrow="預約管理"
+          title="預約清單"
           description="查看待確認、已確認與已取消的預約紀錄，掌握門診排程狀態。"
         />
-
-        {viewer.kind === "local-dev" ? (
-          <div className="mt-6 rounded-2xl border border-amber-300/60 bg-amber-50 px-5 py-4 text-sm text-amber-900">
-            目前使用本機開發暫時入口。這個免登入模式只會在 `development` 且 `localhost`/`127.0.0.1` 存取時啟用。
-          </div>
-        ) : null}
 
         <div className="mt-8 grid gap-4 md:grid-cols-4">
           {statusOptions.map((option) => {
@@ -102,13 +80,19 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
           })}
         </div>
 
-        <div className="mt-8 overflow-hidden rounded-3xl border border-red-900/10 bg-white/90 shadow-lg shadow-red-950/5">
+        <div className="mt-8 flex justify-end">
+          <Link
+            href="/admin/appointments/new"
+            className="rounded-full bg-red-800 px-5 py-2 text-sm font-medium text-amber-100 transition hover:bg-red-700"
+          >
+            新增預約
+          </Link>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-3xl border border-red-900/10 bg-white/90 shadow-lg shadow-red-950/5">
           <div className="flex items-center justify-between border-b border-red-900/10 px-6 py-4">
-            <div>
-              <h2 className="text-xl font-semibold text-red-900">預約清單</h2>
-              <p className="mt-1 text-sm text-stone-600">目前篩選：{statusOptions.find((option) => option.value === activeStatus)?.label ?? "全部預約"}</p>
-            </div>
-            <p className="text-sm text-stone-500">登入身分：{viewer.label}</p>
+            <p className="text-sm text-stone-600">目前篩選：{statusOptions.find((option) => option.value === activeStatus)?.label ?? "全部預約"}</p>
+            <p className="text-sm text-stone-500">登入身分：{access.email}</p>
           </div>
 
           {appointments.length === 0 ? (
@@ -125,6 +109,7 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
                     <th className="px-6 py-4 font-medium">預約時間</th>
                     <th className="px-6 py-4 font-medium">狀態</th>
                     <th className="px-6 py-4 font-medium">症狀與需求</th>
+                    <th className="px-6 py-4 font-medium">操作</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-red-900/10">
@@ -145,6 +130,41 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
                         <span className={statusBadgeClassName(appointment.status)}>{statusLabelMap[appointment.status]}</span>
                       </td>
                       <td className="px-6 py-4 text-stone-600">{appointment.message || "無"}</td>
+                      <td className="px-6 py-4">
+                        <form action={updateAppointmentStatus} className="flex gap-2">
+                          <input type="hidden" name="id" value={appointment.id} />
+                          {appointment.status === AppointmentStatus.PENDING ? (
+                            <button
+                              type="submit"
+                              name="status"
+                              value={AppointmentStatus.CONFIRMED}
+                              className="rounded-full bg-emerald-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-emerald-500"
+                            >
+                              確認
+                            </button>
+                          ) : null}
+                          {appointment.status === AppointmentStatus.PENDING || appointment.status === AppointmentStatus.CONFIRMED ? (
+                            <Link
+                              href={`/admin/appointments/${appointment.id}/edit`}
+                              className="rounded-full border border-amber-400 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-50"
+                            >
+                              修改
+                            </Link>
+                          ) : null}
+                          {appointment.status === AppointmentStatus.PENDING || appointment.status === AppointmentStatus.CONFIRMED ? (
+                            <button
+                              type="submit"
+                              name="status"
+                              value={AppointmentStatus.CANCELLED}
+                              className="rounded-full border border-red-300 px-3 py-1.5 text-xs font-medium text-red-700 transition hover:bg-red-50"
+                            >
+                              取消
+                            </button>
+                          ) : (
+                            <span className="text-xs text-stone-400">—</span>
+                          )}
+                        </form>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -153,13 +173,9 @@ export default async function AdminAppointmentsPage({ searchParams }: PageProps)
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
-
-type AdminViewer =
-  | { kind: "session"; label: string }
-  | { kind: "local-dev"; label: string };
 
 const statusLabelMap: Record<AppointmentStatus, string> = {
   PENDING: "待確認",
@@ -202,34 +218,4 @@ function statusBadgeClassName(status: AppointmentStatus) {
     default:
       return `${commonClassName} bg-red-100 text-red-800`;
   }
-}
-
-async function getAdminViewer(session: Awaited<ReturnType<typeof getServerSession>>): Promise<AdminViewer | null> {
-  const sessionUser = (session as { user?: { email?: string | null; name?: string | null } } | undefined)?.user;
-
-  if (sessionUser) {
-    return {
-      kind: "session",
-      label: sessionUser.email || sessionUser.name || "Google 使用者",
-    };
-  }
-
-  if (!(await isLocalDevAccessAllowed())) {
-    return null;
-  }
-
-  return {
-    kind: "local-dev",
-    label: "本機開發暫時入口",
-  };
-}
-
-async function isLocalDevAccessAllowed() {
-  if (process.env.NODE_ENV !== "development") {
-    return false;
-  }
-
-  const host = (await headers()).get("host")?.toLowerCase() || "";
-
-  return host.startsWith("localhost:") || host.startsWith("127.0.0.1:") || host === "localhost" || host === "127.0.0.1";
 }
