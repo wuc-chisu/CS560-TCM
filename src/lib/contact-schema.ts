@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 export const contactSchema = z.object({
-  name: z.string().trim().min(2, "姓名至少需要 2 個字").max(50, "姓名不可超過 50 個字"),
-  phone: z.string().trim().min(8, "請輸入有效的聯絡電話").max(20, "電話不可超過 20 個字"),
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(50, "Name must be no more than 50 characters"),
+  phone: z.string().trim().min(8, "Enter a valid phone number").max(20, "Phone number must be no more than 20 characters"),
   email: z
     .string()
     .trim()
-    .email("請輸入有效的 Email")
+    .email("Enter a valid email address")
     .optional()
     .or(z.literal("")),
-  message: z.string().trim().min(10, "訊息至少需要 10 個字").max(1000, "訊息不可超過 1000 個字"),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(1000, "Message must be no more than 1,000 characters"),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

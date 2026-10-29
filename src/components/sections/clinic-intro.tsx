@@ -1,10 +1,10 @@
 import { SectionHeading } from "@/components/ui/section-heading";
 
 const introItems = [
-  { title: "專業中醫團隊", text: "主治醫師皆具中醫師執照與臨床經驗，提供精準辨證。" },
-  { title: "客製化調理", text: "依體質與生活型態設計專屬療程，並建立回診追蹤。" },
-  { title: "舒心診療空間", text: "以木質與暖光打造靜心環境，降低看診壓力與緊張感。" },
-  { title: "多元治療整合", text: "整合內科、婦科、針灸與推拿，改善慢性疲勞與疼痛。" },
+  { title: "Experienced TCM Practitioners", text: "Our licensed practitioners bring clinical experience and thoughtful, individualized care." },
+  { title: "Personalized Wellness Plans", text: "Care plans are tailored to your constitution, lifestyle, and ongoing health goals." },
+  { title: "A Welcoming Clinic", text: "A warm, calming space designed to make every visit more comfortable." },
+  { title: "Integrated Care", text: "We offer a range of traditional therapies to support pain relief and overall wellbeing." },
 ];
 
 export function ClinicIntro() {
@@ -14,8 +14,8 @@ export function ClinicIntro() {
         <div>
           <SectionHeading
             eyebrow="ABOUT US"
-            title="以仁心醫術blah blah blah，守護您的身心平衡"
-            description="秉持古法精髓與現代醫學觀點，和安中醫診所重視每一次問診與脈診，從根本改善體質，陪伴您找回穩定健康。"
+            title="Compassionate Care for Mind and Body"
+            description="Combining the wisdom of traditional Chinese medicine with a modern perspective, He An provides attentive care to help you build lasting wellbeing."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {introItems.map((item) => (
@@ -28,13 +28,13 @@ export function ClinicIntro() {
         </div>
         <div className="relative overflow-hidden rounded-3xl border border-red-900/10 bg-gradient-to-b from-[#ecd8bf] to-[#f6ecde] p-6">
           <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-amber-200/50 blur-2xl" />
-          <p className="text-sm text-stone-700">執業經驗</p>
+          <p className="text-sm text-stone-700">Clinical Experience</p>
           <p className="mt-2 text-5xl font-semibold text-red-900">20+</p>
-          <p className="mt-1 text-sm text-stone-600">年中醫臨床團隊整合經驗</p>
+          <p className="mt-1 text-sm text-stone-600">Years of combined TCM team experience</p>
           <div className="mt-10 space-y-3 text-sm text-stone-700">
-            <p>• 一對一問診時間充足，細緻辨證</p>
-            <p>• 門診後提供日常調養建議與飲食方向</p>
-            <p>• 設有女性專屬時段與銀髮友善服務</p>
+            <p>• Dedicated one-on-one consultations</p>
+            <p>• Practical wellness and nutrition guidance after your visit</p>
+            <p>• Women-focused appointments and senior-friendly care</p>
           </div>
         </div>
       </div>

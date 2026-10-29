@@ -3,17 +3,17 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const doctors = [
-  { name: "陳醫師", specialty: "中醫內科" },
-  { name: "林醫師", specialty: "婦科" },
-  { name: "何醫師", specialty: "針灸" },
+  { name: "Dr. Hanwen Chen", specialty: "Internal Medicine & Acupuncture" },
+  { name: "Dr. Siyu Lin", specialty: "Women's Health & Acupuncture" },
+  { name: "Dr. Jingren Zhang", specialty: "Digestive Health & Senior Wellness" },
 ];
 
 const services = [
-  { name: "中醫內科", durationMinutes: 60 },
-  { name: "婦科", durationMinutes: 60 },
-  { name: "針灸", durationMinutes: 60 },
-  { name: "推拿", durationMinutes: 60 },
-  { name: "其它", durationMinutes: 60 },
+  { name: "Internal Medicine", durationMinutes: 60 },
+  { name: "Women's Health", durationMinutes: 60 },
+  { name: "Acupuncture", durationMinutes: 60 },
+  { name: "Tuina Bodywork", durationMinutes: 60 },
+  { name: "Other", durationMinutes: 60 },
 ];
 
 const weekdaySchedules = [1, 2, 3, 4, 5];

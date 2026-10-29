@@ -42,23 +42,23 @@ export async function POST(req: Request) {
       from: smtpConfig.CONTACT_FROM_EMAIL || smtpConfig.SMTP_USER,
       to: smtpConfig.CONTACT_TO_EMAIL,
       replyTo: parsed.email || smtpConfig.SMTP_USER,
-      subject: `網站聯絡表單：${parsed.name}`,
+      subject: `Website Contact Form: ${parsed.name}`,
       text: [
-        "收到新的 Contact Us 訊息",
-        `姓名：${parsed.name}`,
-        `電話：${parsed.phone}`,
-        `Email：${parsed.email || "未提供"}`,
+        "A new contact form message was received.",
+        `Name: ${parsed.name}`,
+        `Phone: ${parsed.phone}`,
+        `Email: ${parsed.email || "Not provided"}`,
         "",
-        "訊息內容：",
+        "Message:",
         parsed.message,
       ].join("\n"),
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #1f2937;">
-          <h2 style="margin-bottom: 16px;">收到新的 Contact Us 訊息</h2>
-          <p><strong>姓名：</strong>${escapeHtml(parsed.name)}</p>
-          <p><strong>電話：</strong>${escapeHtml(parsed.phone)}</p>
-          <p><strong>Email：</strong>${escapeHtml(parsed.email || "未提供")}</p>
-          <p><strong>訊息內容：</strong></p>
+          <h2 style="margin-bottom: 16px;">A new contact form message was received.</h2>
+          <p><strong>Name:</strong> ${escapeHtml(parsed.name)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(parsed.phone)}</p>
+          <p><strong>Email:</strong> ${escapeHtml(parsed.email || "Not provided")}</p>
+          <p><strong>Message:</strong></p>
           <p style="white-space: pre-wrap;">${escapeHtml(parsed.message)}</p>
         </div>
       `,
@@ -66,12 +66,12 @@ export async function POST(req: Request) {
 
     return Response.json({
       success: true,
-      message: "訊息已送出，我們會盡快與您聯繫。",
+      message: "Your message has been sent. We will be in touch soon.",
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return Response.json(
-        { success: false, message: error.issues[0]?.message || "聯絡資料格式有誤，請重新確認。" },
+        { success: false, message: error.issues[0]?.message || "The contact details are invalid. Please review and try again." },
         { status: 400 },
       );
     }
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     console.error("Contact form submission failed", error);
 
     return Response.json(
-      { success: false, message: "系統暫時無法送出訊息，請稍後再試或直接來電聯絡。" },
+      { success: false, message: "We couldn't send your message. Please try again later or call the clinic." },
       { status: 500 },
     );
   }

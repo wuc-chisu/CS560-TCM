@@ -61,10 +61,10 @@ const defaultValues: AppointmentFormValues = {
 };
 
 const stepTitles: Record<AppointmentStep, string> = {
-  1: "病人資訊",
-  2: "選擇治療與醫師",
-  3: "選擇日期",
-  4: "確認時段",
+  1: "Patient Information",
+  2: "Select a Service and Practitioner",
+  3: "Choose a Date",
+  4: "Confirm Appointment",
 };
 
 export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: AppointmentFormProps) {
@@ -76,7 +76,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
   const doctorList = doctorOptions?.length ? doctorOptions : [...appointmentDoctorOptions];
   const serviceList = serviceOptions?.length ? serviceOptions : [...appointmentServiceOptions];
 
-  const selectedDuration = values.patientType === "new" ? "60 分鐘" : values.patientType === "returning" ? "45 分鐘" : "—";
+  const selectedDuration = values.patientType === "new" ? "60 minutes" : values.patientType === "returning" ? "45 minutes" : "—";
   const stepProgress = useMemo(() => Math.round((step / 4) * 100), [step]);
 
   function isStep1Field(field: keyof AppointmentFormValues): field is Step1Field {
@@ -86,25 +86,25 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
   function getStep1Error(field: Step1Field, nextValues: AppointmentFormValues) {
     switch (field) {
       case "patientType":
-        return nextValues.patientType ? undefined : "請選擇病人類型。";
+        return nextValues.patientType ? undefined : "Select a patient type.";
       case "name":
-        return nextValues.name.trim() ? undefined : "請輸入姓名。";
+        return nextValues.name.trim() ? undefined : "Enter your name.";
       case "phone": {
         if (!nextValues.phone.trim()) {
-          return "請輸入手機號碼。";
+          return "Enter your phone number.";
         }
 
-        return nextValues.phone.replace(/\D/g, "").length === 10 ? undefined : "請輸入 10 位數手機號碼。";
+        return nextValues.phone.replace(/\D/g, "").length === 10 ? undefined : "Enter a 10-digit phone number.";
       }
       case "email": {
         if (!nextValues.email.trim()) {
-          return "請輸入 Email。";
+          return "Enter your email address.";
         }
 
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextValues.email) ? undefined : "請輸入有效的 Email。";
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextValues.email) ? undefined : "Enter a valid email address.";
       }
       case "gender":
-        return nextValues.gender ? undefined : "請選擇性別。";
+        return nextValues.gender ? undefined : "Select a gender.";
       default:
         return undefined;
     }
@@ -167,7 +167,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
     const day = date.getDay();
 
     if (day === 0 || day === 6) {
-      input.setCustomValidity("預約日期僅限週一至週五");
+      input.setCustomValidity("Appointments are available Monday through Friday only.");
     } else {
       input.setCustomValidity("");
     }
@@ -199,7 +199,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
 
     if (step === 1 && !validateStepOne()) {
       setStep(1);
-      setStatus({ kind: "error", message: "請先完成步驟一的必填欄位。" });
+      setStatus({ kind: "error", message: "Complete the required fields in Step 1 first." });
       return;
     }
 
@@ -225,7 +225,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
     if (!parsed.success) {
       setStatus({
         kind: "error",
-        message: parsed.error.issues[0]?.message || "請重新確認預約資料。",
+        message: parsed.error.issues[0]?.message || "Please review your appointment details.",
       });
       setStep(4);
       return;
@@ -244,17 +244,17 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
         throw new Error(result.message || "submit failed");
       }
 
-      setStatus({ kind: "success", message: result.message || "已送出預約，診所將於營業時間與您聯繫。" });
+      setStatus({ kind: "success", message: result.message || "Your appointment request has been submitted. The clinic will contact you during business hours." });
       setConfirmation({
         isVisible: true,
         title: "Appointment Successful",
-        message: result.message || "已送出預約，診所將於營業時間與您聯繫。",
+        message: result.message || "Your appointment request has been submitted. The clinic will contact you during business hours.",
       });
       setStep(4);
     } catch (error) {
       setStatus({
         kind: "error",
-        message: error instanceof Error ? error.message : "送出失敗，請稍後再試。",
+        message: error instanceof Error ? error.message : "Unable to submit your request. Please try again later.",
       });
     }
   }
@@ -278,14 +278,14 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
           <div className="mt-5 rounded-xl border border-stone-200 bg-white/80 p-4 text-left text-sm text-stone-700">
             <p className="font-semibold text-red-900">Appointment Summary</p>
             <div className="mt-2 space-y-1">
-              <p>病人：{values.name || "—"}</p>
-              <p>類型：{values.patientType === "new" ? "新病人" : values.patientType === "returning" ? "回診病人" : "—"}</p>
-              <p>診療項目：{values.service || "—"}</p>
-              <p>醫生：{values.doctor || "—"}</p>
-              <p>日期：{values.preferredDate || "—"}</p>
-              <p>時間：{values.preferredTime || "—"}</p>
-              <p>預估時長：{selectedDuration}</p>
-              <p>補充症狀與需求：{values.message || "—"}</p>
+              <p>Patient: {values.name || "—"}</p>
+              <p>Type: {values.patientType === "new" ? "New patient" : values.patientType === "returning" ? "Returning patient" : "—"}</p>
+              <p>Service: {values.service || "—"}</p>
+              <p>Practitioner: {values.doctor || "—"}</p>
+              <p>Date: {values.preferredDate || "—"}</p>
+              <p>Time: {values.preferredTime || "—"}</p>
+              <p>Estimated duration: {selectedDuration}</p>
+              <p>Additional notes: {values.message || "—"}</p>
             </div>
           </div>
           <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
@@ -306,7 +306,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
     <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-red-900/10 bg-white/95 p-4 shadow-lg shadow-red-950/5 sm:p-5">
       <div className="rounded-xl border border-red-900/10 bg-[#fffaf1] p-3 sm:p-4">
         <div className="flex items-center justify-between text-xs font-medium uppercase tracking-[0.2em] text-amber-700">
-          <span>步驟 {step}/4</span>
+          <span>Step {step} of 4</span>
           <span>{stepProgress}%</span>
         </div>
         <div className="mt-2 h-2 rounded-full bg-stone-200">
@@ -319,44 +319,44 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
         <div className="space-y-3">
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm text-stone-700">
-              <span className="mb-1 block font-medium">病人類型</span>
+              <span className="mb-1 block font-medium">Patient Type</span>
               <select
                 value={values.patientType}
                 onChange={(event) => updateField("patientType", event.target.value)}
                 className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
               >
-                <option value="">選擇病人類型</option>
-                <option value="new">新病人</option>
-                <option value="returning">回診病人</option>
+                <option value="">Select a patient type</option>
+                <option value="new">New patient</option>
+                <option value="returning">Returning patient</option>
               </select>
               {step1Errors.patientType ? <p className="mt-1 text-xs text-red-600">{step1Errors.patientType}</p> : null}
             </label>
             <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-              <p className="font-medium">預估時長</p>
+              <p className="font-medium">Estimated Duration</p>
               <p className="mt-1">{selectedDuration}</p>
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm text-stone-700">
-              <span className="mb-1 block font-medium">姓名</span>
+              <span className="mb-1 block font-medium">Name</span>
               <input
                 minLength={2}
                 maxLength={50}
                 value={values.name}
                 onChange={(event) => updateField("name", event.target.value)}
-                placeholder="姓名"
+                placeholder="Name"
                 className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
               />
               {step1Errors.name ? <p className="mt-1 text-xs text-red-600">{step1Errors.name}</p> : null}
             </label>
             <label className="text-sm text-stone-700">
-              <span className="mb-1 block font-medium">手機號碼</span>
+              <span className="mb-1 block font-medium">Phone Number</span>
               <input
                 minLength={8}
                 maxLength={20}
                 value={values.phone}
                 onChange={(event) => updateField("phone", event.target.value)}
-                placeholder="手機號碼"
+                placeholder="Phone Number"
                 className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
               />
               {step1Errors.phone ? <p className="mt-1 text-xs text-red-600">{step1Errors.phone}</p> : null}
@@ -375,35 +375,35 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
           </label>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="text-sm text-stone-700">
-              <span className="mb-1 block font-medium">性別</span>
+              <span className="mb-1 block font-medium">Gender</span>
               <select
                 value={values.gender}
                 onChange={(event) => updateField("gender", event.target.value)}
                 className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
               >
-                <option value="">選擇性別</option>
-                <option value="male">男性</option>
-                <option value="female">女性</option>
-                <option value="other">其他</option>
+                <option value="">Select a gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
               </select>
               {step1Errors.gender ? <p className="mt-1 text-xs text-red-600">{step1Errors.gender}</p> : null}
             </label>
             <label className="text-sm text-stone-700">
-              <span className="mb-1 block font-medium">保險提供者</span>
+              <span className="mb-1 block font-medium">Insurance Provider</span>
               <input
                 value={values.insuranceProvider}
                 onChange={(event) => updateField("insuranceProvider", event.target.value)}
-                placeholder="例如：健保、商保"
+                placeholder="For example: health or private insurance"
                 className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
               />
             </label>
           </div>
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">保險 ID</span>
+            <span className="mb-1 block font-medium">Insurance ID</span>
             <input
               value={values.insuranceId}
               onChange={(event) => updateField("insuranceId", event.target.value)}
-              placeholder="保險 ID"
+              placeholder="Insurance ID"
               className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
             />
           </label>
@@ -413,14 +413,14 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
       {step === 2 ? (
         <div className="space-y-3">
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">選擇診療項目</span>
+            <span className="mb-1 block font-medium">Service</span>
             <select
               required
               value={values.service}
               onChange={(event) => updateField("service", event.target.value)}
               className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
             >
-              <option value="">選擇診療項目</option>
+              <option value="">Select a service</option>
               {serviceList.map((service) => (
                 <option key={service} value={service}>
                   {service}
@@ -429,14 +429,14 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
             </select>
           </label>
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">選擇醫生</span>
+            <span className="mb-1 block font-medium">Practitioner</span>
             <select
               required
               value={values.doctor}
               onChange={(event) => updateField("doctor", event.target.value)}
               className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
             >
-              <option value="">選擇醫生</option>
+              <option value="">Select a practitioner</option>
               {doctorList.map((doctor) => (
                 <option key={doctor} value={doctor}>
                   {doctor}
@@ -445,12 +445,12 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
             </select>
           </label>
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">補充症狀與需求</span>
+            <span className="mb-1 block font-medium">Additional Notes</span>
             <textarea
               rows={4}
               value={values.message}
               onChange={(event) => updateField("message", event.target.value)}
-              placeholder="補充症狀與需求"
+              placeholder="Share any additional information"
               className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
             />
           </label>
@@ -460,7 +460,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
       {step === 3 ? (
         <div className="space-y-3">
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">選擇預約日期</span>
+            <span className="mb-1 block font-medium">Appointment Date</span>
             <input
               required
               type="date"
@@ -474,14 +474,14 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
             />
           </label>
           <label className="block text-sm text-stone-700">
-            <span className="mb-1 block font-medium">選擇時間</span>
+            <span className="mb-1 block font-medium">Appointment Time</span>
             <select
               required
               value={values.preferredTime}
               onChange={(event) => updateField("preferredTime", event.target.value)}
               className="w-full rounded-md border border-stone-300 px-3 py-2 text-sm outline-none ring-red-700/20 transition focus:ring"
             >
-              <option value="">選擇時間（09:00-17:00）</option>
+              <option value="">Select a time (9:00 AM–5:00 PM)</option>
               {appointmentTimeOptions.map((time) => (
                 <option key={time} value={time}>
                   {time}
@@ -489,7 +489,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
               ))}
             </select>
           </label>
-          <p className="text-[11px] leading-5 text-stone-500">預約日期僅限週一至週五，時段開放 09:00 至 17:00。</p>
+          <p className="text-[11px] leading-5 text-stone-500">Appointments are available Monday through Friday, 9:00 AM–5:00 PM.</p>
         </div>
       ) : null}
 
@@ -497,20 +497,20 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
         <div className="space-y-3">
           <div className="rounded-lg border border-stone-200 bg-[#fffaf1] p-3 text-sm text-stone-700">
             <p className="font-semibold text-red-900">Appointment Confirmation</p>
-            <p className="mt-1 text-xs text-stone-500">請確認以下資訊後提交預約。</p>
+            <p className="mt-1 text-xs text-stone-500">Review your information before submitting your appointment request.</p>
             <div className="mt-3 space-y-1">
-              <p>病人：{values.name || "—"}</p>
-              <p>類型：{values.patientType === "new" ? "新病人" : values.patientType === "returning" ? "回診病人" : "—"}</p>
-              <p>電話：{values.phone || "—"}</p>
+              <p>Patient: {values.name || "—"}</p>
+              <p>Type: {values.patientType === "new" ? "New patient" : values.patientType === "returning" ? "Returning patient" : "—"}</p>
+              <p>Phone: {values.phone || "—"}</p>
               <p>Email：{values.email || "—"}</p>
-              <p>診療項目：{values.service || "—"}</p>
-              <p>醫生：{values.doctor || "—"}</p>
-              <p>日期：{values.preferredDate || "—"}</p>
-              <p>時間：{values.preferredTime || "—"}</p>
-              <p>保險：{values.insuranceProvider || "—"}</p>
-              <p>保險 ID：{values.insuranceId || "—"}</p>
-              <p>補充症狀與需求：{values.message || "—"}</p>
-              <p>預估時長：{selectedDuration}</p>
+              <p>Service: {values.service || "—"}</p>
+              <p>Practitioner: {values.doctor || "—"}</p>
+              <p>Date: {values.preferredDate || "—"}</p>
+              <p>Time: {values.preferredTime || "—"}</p>
+              <p>Insurance Provider: {values.insuranceProvider || "—"}</p>
+              <p>Insurance ID: {values.insuranceId || "—"}</p>
+              <p>Additional Notes: {values.message || "—"}</p>
+              <p>Estimated Duration: {selectedDuration}</p>
             </div>
           </div>
         </div>
@@ -523,7 +523,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
           disabled={step === 1}
           className="rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          上一步
+          Previous
         </button>
         {step < 4 ? (
           <button
@@ -531,7 +531,7 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
             onClick={goNext}
             className="rounded-md bg-red-800 px-4 py-2 text-sm font-medium text-amber-100 transition hover:bg-red-700"
           >
-            下一步
+            Next
           </button>
         ) : (
           <div className="flex gap-2">
@@ -540,14 +540,14 @@ export function AppointmentForm({ doctorOptions, serviceOptions, onClose }: Appo
               onClick={goBack}
               className="rounded-md border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
             >
-              上一步
+              Previous
             </button>
             <button
               type="submit"
               disabled={status.kind === "loading"}
               className="rounded-md bg-red-800 px-4 py-2 text-sm font-medium text-amber-100 transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {status.kind === "loading" ? "送出中..." : "Confirm & Submit"}
+              {status.kind === "loading" ? "Submitting..." : "Confirm & Submit"}
             </button>
           </div>
         )}

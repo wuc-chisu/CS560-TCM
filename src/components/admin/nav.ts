@@ -6,32 +6,33 @@ export type AdminNavGroup = {
 
 export const adminNav: AdminNavGroup[] = [
   {
-    label: "預約管理",
+    label: "Appointments",
     href: "/admin/appointments",
     items: [
-      { label: "預約清單", href: "/admin/appointments", description: "查看病人的預約。" },
-      { label: "新增預約", href: "/admin/appointments/new", description: "為病人安排預約。" },
+      { label: "Appointment List", href: "/admin/appointments", description: "View patient appointments." },
+      { label: "New Appointment", href: "/admin/appointments/new", description: "Schedule an appointment for a patient." },
     ],
   },
   {
-    label: "病歷管理",
+    label: "Medical Records",
     href: "/admin/medical-records",
     items: [
-      { label: "病人清單", href: "/admin/medical-records", description: "查看病人並選擇病人。" },
-      { label: "病人資料", href: "/admin/medical-records/patient", description: "查看選定病人的基本資料。" },
-      { label: "過去病歷", href: "/admin/medical-records/history", description: "查看病人過去的看診紀錄。" },
-      { label: "新增病歷", href: "/admin/medical-records/new", description: "新增本次看診紀錄。" },
-      { label: "修改病歷", href: "/admin/medical-records/edit", description: "修改已有的病歷。" },
+      { label: "Patient List", href: "/admin/medical-records", description: "Browse and select patients." },
+      { label: "Patient Details", href: "/admin/medical-records/patient", description: "View the selected patient's basic information." },
+      { label: "Add Patient", href: "/admin/medical-records/patient/new", description: "Create a patient profile." },
+      { label: "Medical History", href: "/admin/medical-records/history", description: "Review a patient's past visit records." },
+      { label: "New Medical Record", href: "/admin/medical-records/new", description: "Add a record for a visit." },
+      { label: "Edit Medical Record", href: "/admin/medical-records/edit", description: "Edit an existing medical record." },
     ],
   },
   {
-    label: "使用者管理",
+    label: "User Management",
     href: "/admin/users",
     items: [
-      { label: "使用者清單", href: "/admin/users", description: "查看可以使用後台的人員。" },
-      { label: "新增使用者", href: "/admin/users/new", description: "新增後台使用者。" },
-      { label: "指定角色", href: "/admin/users/roles", description: "設定為 Admin、前台或醫師。" },
-      { label: "停用使用者", href: "/admin/users/deactivate", description: "停用人員的後台使用資格。" },
+      { label: "User List", href: "/admin/users", description: "View people with access to the admin dashboard." },
+      { label: "Add User", href: "/admin/users/new", description: "Add a new admin dashboard user." },
+      { label: "Manage Roles", href: "/admin/users/roles", description: "Assign admin, front desk, or practitioner roles." },
+      { label: "Deactivate User", href: "/admin/users/deactivate", description: "Disable a user's admin dashboard access." },
     ],
   },
 ];

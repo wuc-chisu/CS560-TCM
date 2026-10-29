@@ -1,43 +1,48 @@
-# 和安中醫診所首頁
+# He An Traditional Chinese Medicine Clinic
 
-使用 Next.js + Tailwind CSS + PostgreSQL (Prisma) 建立的中醫診所首頁專案，風格採中式典雅紅金配色，並支援行動裝置。
+A clinic website built with Next.js, Tailwind CSS, and PostgreSQL (Prisma), featuring an elegant red-and-gold design and responsive layouts for mobile devices.
 
-## 技術棧
+## Tech Stack
 
 - Next.js App Router
 - Tailwind CSS
-- Clerk 登入（管理員由 `ADMIN_EMAILS` 設定，預設 `chisu@wuc.edu`）
+- Clerk authentication (administrators are configured with `ADMIN_EMAILS`)
 - PostgreSQL + Prisma
 - TypeScript + Zod
 
-## 首頁內容
+## Website Sections
 
-- Hero Banner
-- 診所介紹
-- 診療項目
-- 醫師團隊
-- 健康專欄
-- 聯絡我們（含預約與聯絡表單）
+- Hero banner
+- About the clinic
+- Services
+- Practitioner team
+- Health articles
+- Contact, appointment booking, and contact forms
 
-## 專案結構
+## Project Structure
 
 ```text
 src/
   app/
+    admin/
+      appointments/
+      medical-records/
+      users/
     api/
       appointments/route.ts
-      auth/[...nextauth]/route.ts
       contact/route.ts
+    sign-in/
+    sign-up/
     globals.css
     layout.tsx
     page.tsx
   components/
-    auth/google-login-button.tsx
+    admin/
     forms/appointment-form.tsx
     forms/contact-form.tsx
     layout/site-header.tsx
     layout/site-footer.tsx
-    providers/session-provider.tsx
+    providers/appointment-modal-provider.tsx
     sections/
       hero-banner.tsx
       clinic-intro.tsx
@@ -47,27 +52,28 @@ src/
       contact-us.tsx
     ui/section-heading.tsx
   lib/
-    auth.ts
+    admin.ts
     prisma.ts
 prisma/
   schema.prisma
+  seed.mjs
 ```
 
-## 本機啟動
+## Run Locally
 
-1. 安裝套件
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. 建立環境變數
+2. Set up environment variables:
 
 ```bash
 cp .env.example .env
 ```
 
-3. 初始化 Prisma Client 與資料表
+3. Generate the Prisma Client, create the database tables, and seed the database:
 
 ```bash
 npx prisma generate
@@ -75,21 +81,21 @@ npx prisma db push
 npm run db:seed
 ```
 
-4. 啟動開發伺服器
+4. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-## Clerk 登入設定
+## Clerk Authentication
 
-- 執行 `clerk init` 或將 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 與 `CLERK_SECRET_KEY` 填入 `.env.local`
-- 管理員帳號以 `ADMIN_EMAILS`（逗號分隔，預設 `chisu@wuc.edu`）設定，且 Email 必須已通過驗證
+- Run `clerk init` or add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` to `.env.local`.
+- Configure administrator accounts with `ADMIN_EMAILS` as a comma-separated list. Each email must be verified.
 
-## Contact Us 表單寄信設定
+## Contact Form Email
 
-- 安裝寄信套件：`npm install nodemailer`
-- 在專案根目錄建立 `.env.local`，並填入以下 Gmail SMTP 設定：
+- Install the mail package with `npm install nodemailer`.
+- Create a `.env.local` file in the project root and add your Gmail SMTP settings:
 
 ```bash
 SMTP_HOST="smtp.gmail.com"
@@ -100,30 +106,30 @@ CONTACT_TO_EMAIL="your-gmail@gmail.com"
 CONTACT_FROM_EMAIL="your-gmail@gmail.com"
 ```
 
-- `SMTP_PASS` 請使用 Gmail App Password，不要填入一般登入密碼
-- 使用者送出聯絡表單後，網站會呼叫 `POST /api/contact`，API 會先驗證欄位，再透過 Gmail SMTP 將內容寄到 `CONTACT_TO_EMAIL`
+- Use a Gmail App Password for `SMTP_PASS`, not your regular account password.
+- When a visitor submits the contact form, the website calls `POST /api/contact`. The API validates the fields and sends the message to `CONTACT_TO_EMAIL` through Gmail SMTP.
 
-## Contact Us 測試方式
+## Test the Contact Form
 
-1. 將 `.env.example` 內容補到 `.env.local`
-2. 執行 `npm run dev`
-3. 開啟首頁並送出 Contact Us 表單
-4. 確認畫面有成功訊息，並檢查 Gmail 收件匣
-5. 可用少於 10 字的訊息測試驗證錯誤，確認表單會顯示失敗原因
+1. Copy the contents of `.env.example` into `.env.local`.
+2. Run `npm run dev`.
+3. Open the homepage and submit the contact form.
+4. Confirm the success message appears and check the recipient inbox.
+5. Test validation by entering a message shorter than 10 characters and confirm that the form displays an error.
 
-## 預約資料儲存
+## Appointment Data
 
-- 預約表單送出後會呼叫 `POST /api/appointments`
-- API 透過 Prisma 將資料寫入 PostgreSQL，並關聯 `Patient`、`Doctor`、`Service`、`Appointment` 等預約資料表
-- Booking Form 的醫師與診療項目選單會從資料庫的啟用資料讀取
-- 同一位醫師在相同日期與時間若已有 `PENDING` 或 `CONFIRMED` 預約，系統會阻擋重複預約
-- API 也會檢查 `DoctorSchedule` 與 `ClinicClosure`，擋掉未開診時段與休診日
+- Submitting the appointment form calls `POST /api/appointments`.
+- The API uses Prisma to write to PostgreSQL and relate `Patient`, `Doctor`, `Service`, and `Appointment` records.
+- Practitioner and service choices are defined in English in `src/lib/appointment-schema.ts`; the API checks that each choice has an active database record.
+- The system prevents a practitioner from receiving overlapping `PENDING` or `CONFIRMED` appointments.
+- The API also checks `DoctorSchedule` and `ClinicClosure` records to prevent bookings outside available hours or on closure dates.
 
-## 預設預約資料
+## Default Appointment Data
 
-- 執行 `npm run db:seed` 會建立預設醫師、診療項目與週一至週五 09:00-17:00 的醫師排班資料
+- Run `npm run db:seed` to create the English-language practitioners, services, and weekday schedules from 9:00 AM to 5:00 PM. Run the seed after upgrading an existing database so the English choices are available.
 
-## 預約管理後台
+## Appointment Admin Dashboard
 
-- 路徑為 `/admin/appointments`
-- 僅管理員可進入；未登入會顯示登入按鈕，非管理員會看到無權限提示。管理員登入後可查看全部、待確認、已確認、已取消的預約清單
+- Open `/admin/appointments`.
+- Only administrators can access this page. Signed-out users see a sign-in button, and users without administrator access see a permission message. Administrators can view all, pending, confirmed, and cancelled appointments.

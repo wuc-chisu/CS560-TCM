@@ -47,15 +47,15 @@ export function AppointmentModalProvider({ children, doctorOptions, serviceOptio
           >
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold text-red-900">門診預約</h3>
-                <p className="mt-1 text-sm text-stone-600">請填寫您的需求，我們將盡快與您聯絡。</p>
+                <h3 className="text-xl font-semibold text-red-900">Book an Appointment</h3>
+                <p className="mt-1 text-sm text-stone-600">Tell us what you need, and our team will be in touch soon.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="rounded-full border border-stone-300 bg-white px-3 py-1 text-sm text-stone-600 transition hover:bg-stone-100"
               >
-                關閉
+                Close
               </button>
             </div>
             <AppointmentForm doctorOptions={doctorOptions} serviceOptions={serviceOptions} onClose={closeAppointmentModal} />

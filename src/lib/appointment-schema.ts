@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-export const appointmentServiceOptions = ["中醫內科", "婦科", "針灸", "推拿", "其它"] as const;
-export const appointmentDoctorOptions = ["陳醫師", "林醫師", "何醫師"] as const;
+export const appointmentServiceOptions = ["Internal Medicine", "Women's Health", "Acupuncture", "Tuina Bodywork", "Other"] as const;
+export const appointmentDoctorOptions = ["Dr. Hanwen Chen", "Dr. Siyu Lin", "Dr. Jingren Zhang"] as const;
 export const appointmentTimeOptions = [
   "09:00",
   "10:00",
@@ -32,26 +32,26 @@ function buildPreferredAt(date: string, time: string) {
 export const appointmentSchema = z
   .object({
     patientType: z.enum(["new", "returning"]).optional().or(z.literal("")),
-    name: z.string().trim().min(2, "姓名至少需要 2 個字").max(50, "姓名不可超過 50 個字"),
+    name: z.string().trim().min(2, "Name must be at least 2 characters").max(50, "Name must be no more than 50 characters"),
     phone: z
       .string()
       .trim()
-      .regex(/^[0-9+\-()\s]{8,20}$/, "請輸入有效的手機號碼"),
+      .regex(/^[0-9+\-()\s]{8,20}$/, "Enter a valid phone number"),
     email: z
       .string()
       .trim()
-      .email("請輸入有效的 Email")
+      .email("Enter a valid email address")
       .optional()
       .or(z.literal("")),
-    service: z.string().trim().min(1, "請選擇診療項目").max(50, "診療項目不可超過 50 個字"),
+    service: z.string().trim().min(1, "Select a service").max(50, "Service must be no more than 50 characters"),
     preferredDate: z
       .string()
       .trim()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "請選擇預約日期")
-      .refine(isWeekday, "預約日期僅限週一至週五"),
-    preferredTime: z.enum(appointmentTimeOptions, "請選擇預約時間"),
-    doctor: z.string().trim().min(1, "請選擇醫師").max(50, "醫師名稱不可超過 50 個字"),
-    message: z.string().trim().max(500, "補充症狀與需求不可超過 500 個字").optional().or(z.literal("")),
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Select an appointment date")
+      .refine(isWeekday, "Appointments are available Monday through Friday only"),
+    preferredTime: z.enum(appointmentTimeOptions, "Select an appointment time"),
+    doctor: z.string().trim().min(1, "Select a practitioner").max(50, "Practitioner name must be no more than 50 characters"),
+    message: z.string().trim().max(500, "Message must be no more than 500 characters").optional().or(z.literal("")),
   })
   .transform((data) => ({
     ...data,

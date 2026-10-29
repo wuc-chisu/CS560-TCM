@@ -2,19 +2,19 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 const doctors = [
   {
-    name: "陳漢文 醫師",
-    specialty: "中醫內科．針灸疼痛",
-    intro: "專精慢性疼痛與自律神經失衡調理，臨床經驗超過 18 年。",
+    name: "Hanwen Chen, L.Ac.",
+    specialty: "Internal Medicine & Acupuncture",
+    intro: "Specializes in chronic pain and nervous system support, with over 18 years of clinical experience.",
   },
   {
-    name: "林思妤 醫師",
-    specialty: "婦科調理．美容針灸",
-    intro: "擅長女性荷爾蒙平衡、孕前體質調理與肌膚循環改善。",
+    name: "Siyu Lin, L.Ac.",
+    specialty: "Women's Health & Cosmetic Acupuncture",
+    intro: "Focuses on women's wellness, preconception support, and skin health.",
   },
   {
-    name: "張景仁 醫師",
-    specialty: "脾胃調理．銀髮養生",
-    intro: "深耕銀髮族慢性病照護與術後康復中醫支持方案。",
+    name: "Jingren Zhang, L.Ac.",
+    specialty: "Digestive Health & Senior Wellness",
+    intro: "Provides traditional medicine support for chronic conditions and post-surgical recovery.",
   },
 ];
 
@@ -22,7 +22,7 @@ export function Doctors() {
   return (
     <section id="doctors" className="bg-[#f8f2e8] py-16 sm:py-20">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="EXPERT TEAM" title="專業醫師團隊" description="由資深醫師領銜，堅持辨證施治與細緻追蹤。" center />
+        <SectionHeading eyebrow="OUR TEAM" title="Meet Our Practitioners" description="Experienced practitioners committed to attentive, individualized care." center />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {doctors.map((doctor) => (
             <article key={doctor.name} className="rounded-2xl border border-red-900/10 bg-white p-5 text-center shadow-sm">

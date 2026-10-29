@@ -1,23 +1,21 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Noto_Sans_TC, Noto_Serif_TC } from "next/font/google";
+import { Geist, Lora } from "next/font/google";
 import "./globals.css";
 
-const notoSansTc = Noto_Sans_TC({
-  variable: "--font-noto-sans-tc",
-  weight: ["400", "500", "700"],
+const geist = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const notoSerifTc = Noto_Serif_TC({
-  variable: "--font-noto-serif-tc",
-  weight: ["400", "600", "700"],
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "和安中醫診所 | 傳統智慧與現代照護",
-  description: "和安中醫診所官方網站，提供線上預約、醫師團隊與健康專欄資訊。",
+  title: "He An Traditional Chinese Medicine Clinic | Ancient Wisdom, Modern Care",
+  description: "Book an appointment and explore the practitioners, services, and wellness resources at He An Traditional Chinese Medicine Clinic.",
 };
 
 export default function RootLayout({
@@ -27,8 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="zh-Hant"
-      className={`${notoSansTc.variable} ${notoSerifTc.variable} h-full antialiased`}
+      lang="en"
+      className={`${geist.variable} ${lora.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ClerkProvider>

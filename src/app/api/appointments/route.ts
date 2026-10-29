@@ -28,11 +28,11 @@ function getSmtpConfig() {
 function formatPatientType(patientType: string) {
   switch (patientType) {
     case "new":
-      return "新病人";
+      return "New patient";
     case "returning":
-      return "回診病人";
+      return "Returning patient";
     default:
-      return "未提供";
+      return "Not provided";
   }
 }
 
@@ -48,28 +48,28 @@ function escapeHtml(value: string) {
 function buildAppointmentEmailContent(parsed: { name: string; patientType: string; service: string; doctor: string; preferredDate: string; preferredTime: string; phone: string; email: string }) {
   const patientTypeLabel = formatPatientType(parsed.patientType || "");
   const lines = [
-    "您已成功提交門診預約",
-    `病人姓名：${parsed.name}`,
-    `病人類型：${patientTypeLabel}`,
-    `診療項目：${parsed.service}`,
-    `醫師：${parsed.doctor}`,
-    `預約日期：${parsed.preferredDate}`,
-    `預約時間：${parsed.preferredTime}`,
-    `電話：${parsed.phone}`,
-    `Email：${parsed.email || "未提供"}`,
+    "Your appointment request has been submitted.",
+    `Patient name: ${parsed.name}`,
+    `Patient type: ${patientTypeLabel}`,
+    `Service: ${parsed.service}`,
+    `Practitioner: ${parsed.doctor}`,
+    `Date: ${parsed.preferredDate}`,
+    `Time: ${parsed.preferredTime}`,
+    `Phone: ${parsed.phone}`,
+    `Email: ${parsed.email || "Not provided"}`,
   ];
 
   const html = `
     <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #1f2937;">
-      <h2 style="margin-bottom: 12px;">您已成功提交門診預約</h2>
-      <p><strong>病人姓名：</strong>${escapeHtml(parsed.name)}</p>
-      <p><strong>病人類型：</strong>${escapeHtml(patientTypeLabel)}</p>
-      <p><strong>診療項目：</strong>${escapeHtml(parsed.service)}</p>
-      <p><strong>醫師：</strong>${escapeHtml(parsed.doctor)}</p>
-      <p><strong>預約日期：</strong>${escapeHtml(parsed.preferredDate)}</p>
-      <p><strong>預約時間：</strong>${escapeHtml(parsed.preferredTime)}</p>
-      <p><strong>電話：</strong>${escapeHtml(parsed.phone)}</p>
-      <p><strong>Email：</strong>${escapeHtml(parsed.email || "未提供")}</p>
+      <h2 style="margin-bottom: 12px;">Your appointment request has been submitted.</h2>
+      <p><strong>Patient name:</strong> ${escapeHtml(parsed.name)}</p>
+      <p><strong>Patient type:</strong> ${escapeHtml(patientTypeLabel)}</p>
+      <p><strong>Service:</strong> ${escapeHtml(parsed.service)}</p>
+      <p><strong>Practitioner:</strong> ${escapeHtml(parsed.doctor)}</p>
+      <p><strong>Date:</strong> ${escapeHtml(parsed.preferredDate)}</p>
+      <p><strong>Time:</strong> ${escapeHtml(parsed.preferredTime)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(parsed.phone)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(parsed.email || "Not provided")}</p>
     </div>
   `;
 
@@ -97,7 +97,7 @@ async function sendAppointmentEmails(parsed: { name: string; patientType: string
       ? transporter.sendMail({
           from: fromAddress,
           to: parsed.email,
-          subject: `門診預約確認：${parsed.name}`,
+          subject: `Appointment Confirmation: ${parsed.name}`,
           text: emailContent.text,
           html: emailContent.html,
         })
@@ -105,7 +105,7 @@ async function sendAppointmentEmails(parsed: { name: string; patientType: string
     transporter.sendMail({
       from: fromAddress,
       to: adminEmail,
-      subject: `新門診預約通知：${parsed.name}`,
+      subject: `New Appointment Request: ${parsed.name}`,
       text: emailContent.text,
       html: emailContent.html,
     }),
@@ -149,7 +149,7 @@ export async function POST(req: Request) {
           {
             code: "custom",
             path: ["doctor"],
-            message: "選擇的醫師目前不可預約，請重新選擇。",
+            message: "The selected practitioner is not currently available for booking. Please choose another practitioner.",
           },
         ]);
       }
@@ -164,8 +164,8 @@ export async function POST(req: Request) {
       });
 
       if (clinicClosure) {
-        const closureReason = clinicClosure.reason ? `：${clinicClosure.reason}` : "";
-        throw new AppointmentUnavailableError(`您選擇的日期為休診日${closureReason}，請改選其他日期。`);
+        const closureReason = clinicClosure.reason ? ` Reason: ${clinicClosure.reason}` : "";
+        throw new AppointmentUnavailableError(`The clinic is closed on your selected date.${closureReason} Please choose another date.`);
       }
 
       const doctorSchedule = await tx.doctorSchedule.findFirst({
@@ -183,7 +183,7 @@ export async function POST(req: Request) {
       });
 
       if (!doctorSchedule) {
-        throw new AppointmentUnavailableError("此醫師在您選擇的日期與時間未開放門診，請改選其他時段。");
+        throw new AppointmentUnavailableError("The selected practitioner is not available at that date and time. Please choose another time.");
       }
 
       const service = await tx.service.findFirst({
@@ -198,7 +198,7 @@ export async function POST(req: Request) {
           {
             code: "custom",
             path: ["service"],
-            message: "選擇的診療項目目前不可預約，請重新選擇。",
+            message: "The selected service is not currently available for booking. Please choose another service.",
           },
         ]);
       }
@@ -217,7 +217,7 @@ export async function POST(req: Request) {
       });
 
       if (existingAppointment) {
-        throw new AppointmentConflictError("此醫師在您選擇的日期與時間已有預約，請改選其他時段。");
+        throw new AppointmentConflictError("The selected practitioner already has an appointment at that date and time. Please choose another time.");
       }
 
       return tx.appointment.create({
@@ -254,12 +254,12 @@ export async function POST(req: Request) {
     return Response.json({
       success: true,
       id: appointment.id,
-      message: "已送出預約，診所將於營業時間與您聯繫。",
+      message: "Your appointment request has been submitted. The clinic will contact you during business hours.",
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return Response.json(
-        { success: false, message: error.issues[0]?.message || "預約資料格式有誤，請重新確認。" },
+        { success: false, message: error.issues[0]?.message || "The appointment details are invalid. Please review and try again." },
         { status: 400 },
       );
     }
@@ -281,7 +281,7 @@ export async function POST(req: Request) {
     console.error("Appointment submission failed", error);
 
     return Response.json(
-      { success: false, message: "系統暫時無法送出預約，請稍後再試或直接來電聯絡。" },
+      { success: false, message: "We couldn't submit your appointment request. Please try again later or call the clinic." },
       { status: 500 },
     );
   }
