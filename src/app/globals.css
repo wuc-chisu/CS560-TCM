@@ -25,6 +25,34 @@ body {
     radial-gradient(circle at 90% 10%, rgba(125, 29, 29, 0.12), transparent 30%);
 }
 
+.encounter-print-summary {
+  display: none;
+}
+
+@media print {
+  @page {
+    margin: 0.75in;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .encounter-print-summary,
+  .encounter-print-summary * {
+    visibility: visible !important;
+  }
+
+  .encounter-print-summary {
+    position: absolute;
+    inset: 0;
+    display: block !important;
+    width: 100%;
+    background: white;
+    color: #2f241f;
+  }
+}
+
 h1,
 h2,
 h3,

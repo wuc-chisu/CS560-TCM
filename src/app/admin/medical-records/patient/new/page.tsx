@@ -48,15 +48,17 @@ export default function NewPatientPage() {
     setCurrentStep((step) => Math.min(step + 1, steps.length - 1));
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateCurrentStep()) return;
 
     if (currentStep < steps.length - 1) {
       setCurrentStep((step) => Math.min(step + 1, steps.length - 1));
-      return;
     }
+  }
 
+  async function savePatient() {
+    if (currentStep !== steps.length - 1 || !validateCurrentStep()) return;
     const form = formRef.current;
     if (!form) return;
 
@@ -416,7 +418,8 @@ export default function NewPatientPage() {
               </button>
             ) : (
               <button
-                type="submit"
+                type="button"
+                onClick={savePatient}
                 disabled={isSaving}
                 className="rounded-full bg-red-800 px-5 py-2.5 text-sm font-medium text-amber-100 transition hover:bg-red-700"
               >

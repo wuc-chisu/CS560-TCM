@@ -87,6 +87,47 @@ const intakeSchema = z.object({
   }
 });
 
+const formFieldNames = [
+  "firstName",
+  "middleName",
+  "lastName",
+  "preferredName",
+  "dateOfBirth",
+  "gender",
+  "preferredLanguage",
+  "maritalStatus",
+  "occupation",
+  "phone",
+  "email",
+  "address",
+  "addressLine2",
+  "city",
+  "state",
+  "zipCode",
+  "preferredContactMethod",
+  "emergencyFirstName",
+  "emergencyLastName",
+  "emergencyRelationship",
+  "emergencyPhone",
+  "emergencyEmail",
+  "willUseInsurance",
+  "insuranceProvider",
+  "insuranceMemberId",
+  "insuranceGroupNumber",
+  "policyholderName",
+  "policyholderRelationship",
+  "policyholderDateOfBirth",
+  "insuranceEffectiveDate",
+  "allergies",
+  "currentMedications",
+  "majorMedicalConditions",
+  "previousSurgeriesOrHospitalizations",
+  "pregnancyStatus",
+  "primaryCarePhysician",
+  "primaryCarePhysicianPhone",
+  "previousAcupunctureExperience",
+] as const;
+
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
@@ -107,7 +148,7 @@ export async function savePatientIntake(formData: FormData) {
   }
 
   const formValues = Object.fromEntries(
-    Array.from(formData.keys(), (key) => [key, getString(formData, key)]),
+    formFieldNames.map((fieldName) => [fieldName, getString(formData, fieldName)]),
   );
   const parsed = intakeSchema.safeParse(formValues);
 

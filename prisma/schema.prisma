@@ -16,49 +16,49 @@ enum AppointmentStatus {
 }
 
 model Patient {
-  id                               String        @id @default(cuid())
-  name                             String
-  phone                            String        @unique
-  email                            String?
-  firstName                        String?
-  middleName                       String?
-  lastName                         String?
-  preferredName                    String?
-  dateOfBirth                      DateTime?
-  gender                           String?
-  preferredLanguage                String?
-  maritalStatus                    String?
-  occupation                       String?
-  address                          String?
-  addressLine2                     String?
-  city                             String?
-  state                            String?
-  zipCode                          String?
-  preferredContactMethod           String?
-  emergencyFirstName               String?
-  emergencyLastName                String?
-  emergencyRelationship            String?
-  emergencyPhone                   String?
-  emergencyEmail                   String?
-  willUseInsurance                 Boolean?
-  insuranceProvider                String?
-  insuranceMemberId                String?
-  insuranceGroupNumber             String?
-  policyholderName                 String?
-  policyholderRelationship         String?
-  policyholderDateOfBirth          DateTime?
-  insuranceEffectiveDate           DateTime?
-  allergies                        String?
-  currentMedications                String?
-  majorMedicalConditions            String?
+  id                                  String        @id @default(cuid())
+  name                                String
+  phone                               String        @unique
+  email                               String?
+  firstName                           String?
+  middleName                          String?
+  lastName                            String?
+  preferredName                       String?
+  dateOfBirth                         DateTime?
+  gender                              String?
+  preferredLanguage                   String?
+  maritalStatus                       String?
+  occupation                          String?
+  address                             String?
+  addressLine2                        String?
+  city                                String?
+  state                               String?
+  zipCode                             String?
+  preferredContactMethod              String?
+  emergencyFirstName                  String?
+  emergencyLastName                   String?
+  emergencyRelationship               String?
+  emergencyPhone                      String?
+  emergencyEmail                      String?
+  willUseInsurance                    Boolean?
+  insuranceProvider                   String?
+  insuranceMemberId                   String?
+  insuranceGroupNumber                String?
+  policyholderName                    String?
+  policyholderRelationship            String?
+  policyholderDateOfBirth             DateTime?
+  insuranceEffectiveDate              DateTime?
+  allergies                           String?
+  currentMedications                  String?
+  majorMedicalConditions              String?
   previousSurgeriesOrHospitalizations String?
-  pregnancyStatus                  String?
-  primaryCarePhysician              String?
-  primaryCarePhysicianPhone         String?
-  previousAcupunctureExperience     String?
-  appointments                     Appointment[]
-  createdAt                        DateTime      @default(now())
-  updatedAt                        DateTime      @updatedAt
+  pregnancyStatus                     String?
+  primaryCarePhysician                String?
+  primaryCarePhysicianPhone           String?
+  previousAcupunctureExperience       String?
+  appointments                        Appointment[]
+  createdAt                           DateTime      @default(now())
+  updatedAt                           DateTime      @updatedAt
 }
 
 model Doctor {
